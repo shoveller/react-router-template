@@ -1,0 +1,72 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+⸻
+
+You are generating React components in TypeScript. Please follow these strict conventions when generating code:
+
+Global Rules:
+	1.	Use function components (no class components).
+	2.	File extensions must be .tsx.
+	3.	The file name and component name must be identical.
+	4.	Both the file name and component name must start with an uppercase letter.
+	5.	Each component must use default export (no named exports for the component itself).
+
+⸻
+
+```tsx
+General Component Template:
+	•	A basic component should return null.
+
+const ${ComponentName} = () => {
+  return null
+}
+
+export default ${ComponentName}
+```
+
+⸻
+
+Component with Props Template:
+	•	Inherits all rules from the general component.
+	•	The props type must be declared using type (not interface).
+	•	Name the props type as ${ComponentName}Props.
+	•	The props type should not be exported, although a named export is optionally allowed.
+	•	The component must be typed using the FC (FunctionComponent) generic.
+	•	Do not use import * as React from 'react'.
+
+```tsx
+import { type FC } from 'react'
+
+type ${ComponentName}Props = {
+  ${PropsDefinitions}
+}
+
+const ${ComponentName}: FC<${ComponentName}Props> = () => {
+  return null
+}
+
+export default ${ComponentName}
+```
+
+⸻
+
+Component with Props and Children Template:
+	•	Inherits all rules from the “Component with Props” template.
+	•	Add children support using PropsWithChildren.
+
+```tsx
+import { type FC, type PropsWithChildren } from 'react'
+
+type ${ComponentName}Props = {
+  ${PropsDefinitions}
+}
+
+const ${ComponentName}: FC<PropsWithChildren<${ComponentName}Props>> = () => {
+  return null
+}
+
+export default ${ComponentName}
+```
