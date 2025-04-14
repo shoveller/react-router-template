@@ -4,6 +4,6 @@ globs:
 alwaysApply: true
 ---
 •	Use only pnpm as the package manager.
-•	Since Tailwind CSS version 4.0 or higher is used, tailwind.config.js and tailwind.config.ts files are not required.
+•	Use Tailwind CSS version 4.0 or higher.
 •	Follow the Conventional Commits specification for commit messages.
 •	After finishing your work, run pnpm format to apply the linter and format the code.
