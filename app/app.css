@@ -1,5 +1,7 @@
 @config "../tailwind.config.ts";
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@plugin "tailwindcss-animate";
 
 @theme {
   --font-sans:
