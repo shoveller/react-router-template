@@ -1,0 +1,78 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 'latest'
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: 클라우드 플레어 pages 빌드 시작 알림
+        uses: cbrgm/telegram-github-action@v1
+        with:
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          message: |
+            🚀 Cloudflare Pages 배포 시작
+            프로젝트: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+            브랜치: ${{ github.ref_name }}
+            커밋: ${{ github.event.head_commit.message }}
+            작업자: ${{ github.actor }}
+
+      - name: Create .env file
+        run: |
+          echo "VITE_PROJECT_URL=${{ secrets.VITE_PROJECT_URL }}" >> .env
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm dlx wrangler pages deploy ${{ secrets.PROJECT_BUILD_PATH }} --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+
+      - name: 클라우드 플레어 pages 배포 성공 알림
+        if: success()
+        uses: cbrgm/telegram-github-action@v1
+        with:
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          message: |
+            ✅ Cloudflare Pages 배포 성공
+            프로젝트: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+            브랜치: ${{ github.ref_name }}
+            배포 URL: ${{ secrets.VITE_PROJECT_URL }}
+
+      - name: 클라우드 플레어 pages 배포 실패 알림
+        if: failure()
+        uses: cbrgm/telegram-github-action@v1
+        with:
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          message: |
+            ❌ Cloudflare Pages 배포 실패
+            프로젝트: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+            브랜치: ${{ github.ref_name }}
+            작업 링크: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
