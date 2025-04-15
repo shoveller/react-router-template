@@ -36,15 +36,13 @@ jobs:
             커밋: ${{ github.event.head_commit.message }}
             작업자: ${{ github.actor }}
 
-      - name: Create .env file
-        run: |
-          echo "VITE_PROJECT_URL=${{ secrets.VITE_PROJECT_URL }}" >> .env
-
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
 
       - name: Build project
         run: pnpm build
+        env:
+          VITE_PROJECT_URL: ${{ secrets.VITE_PROJECT_URL }}
 
       - name: Deploy to Cloudflare Pages
         id: deploy
