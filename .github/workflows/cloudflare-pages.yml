@@ -1,10 +1,10 @@
 name: Deploy to Cloudflare Pages
 
-on:
-  push:
-    branches:
-      - main
-# on: workflow_dispatch # push 트리거 대신 수동 실행만 가능하도록 변경
+# on:
+#   push:
+#     branches:
+#       - main
+on: workflow_dispatch # push 트리거 대신 수동 실행만 가능하도록 변경
 
 jobs:
   deploy:
