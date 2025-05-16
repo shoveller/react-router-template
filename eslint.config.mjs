@@ -209,5 +209,8 @@ export default tseslint.config(
         { allowConstantExport: true }
       ]
     }
+  },
+  {
+    ignores: ['.react-router/**']
   }
 )
